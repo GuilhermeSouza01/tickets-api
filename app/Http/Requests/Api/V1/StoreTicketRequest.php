@@ -11,7 +11,7 @@ class StoreTicketRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,20 @@ class StoreTicketRequest extends FormRequest
      */
     public function rules(): array
     {
+        $rules = [
+            'data.attributes.title' => 'required|string',
+            'data.attributes.description' => 'required|string',
+            'data.attributes.status' => 'required|string|in:open,in_progress,closed',
+            'data.attributes.priority' => 'required|string|in:low,medium,high',
+        ];
+        if($this->routeIs('tickets.store')) {
+            $rules['data.relationships.author.data.id'] = 'required|integer';
+        }
+        return $rules;
+    }
+    public function messages(): array {
         return [
-            //
+            'data.relationships.author.data.id.required' => 'The id field is required.',
         ];
     }
 }
