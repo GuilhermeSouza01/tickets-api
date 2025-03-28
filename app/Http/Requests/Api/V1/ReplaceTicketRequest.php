@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReplaceTicketRequest extends FormRequest
+class ReplaceTicketRequest extends BaseTicketRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,10 +29,5 @@ class ReplaceTicketRequest extends FormRequest
             'data.relationships.author.data.id' => 'required|integer',
         ];
         return $rules;
-    }
-    public function messages(): array {
-        return [
-            'data.relationships.author.data.id.required' => 'The id field is required.',
-        ];
     }
 }

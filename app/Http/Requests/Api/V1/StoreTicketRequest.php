@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTicketRequest extends FormRequest
+class StoreTicketRequest extends BaseTicketRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,10 +31,5 @@ class StoreTicketRequest extends FormRequest
             $rules['data.relationships.author.data.id'] = 'required|integer';
         }
         return $rules;
-    }
-    public function messages(): array {
-        return [
-            'data.relationships.author.data.id.required' => 'The id field is required.',
-        ];
     }
 }
