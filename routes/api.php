@@ -15,9 +15,13 @@ Route::prefix('v1')->group(function () {
 
     // Protected Routes (Sanctum)
     Route::middleware('auth:sanctum')->group(function () {
-        Route::apiResource('tickets', TicketController::class);
+        Route::apiResource('tickets', TicketController::class)->except(['update']);
+        Route::put('tickets/{ticket}', [TicketController::class, 'replace']);
+
         Route::apiResource('authors', AuthorsController::class);
-        Route::apiResource('authors.tickets', AuthorTicketsController::class);
+        Route::apiResource('authors.tickets', AuthorTicketsController::class)->except(['update']);
+        Route::put('authors/{author}/tickets/{ticket}', [AuthorTicketsController::class, 'replace']);
+
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', function (Request $request) {
             return $request->user();
