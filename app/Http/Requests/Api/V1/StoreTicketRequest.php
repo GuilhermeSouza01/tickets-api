@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Permissions\V1\Abilities;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTicketRequest extends BaseTicketRequest
@@ -26,8 +27,15 @@ class StoreTicketRequest extends BaseTicketRequest
             'data.attributes.description' => 'required|string',
             'data.attributes.status' => 'required|string|in:open,in_progress,closed',
             'data.attributes.priority' => 'required|string|in:low,medium,high',
+            'data.relationships.author.data.id' => 'required|integer|exists:users,id',
         ];
+
+        $user = $this->user();
         if($this->routeIs('tickets.store')) {
+            if($user->tokenCan(Abilities::CreateOwnTicket))
+            {
+                $rules['data.relationships.author.data.id'] .= '|size:' . $user->id;
+            }
             $rules['data.relationships.author.data.id'] = 'required|integer';
         }
         return $rules;
