@@ -27,12 +27,12 @@ class UpdateTicketRequest extends BaseTicketRequest
             'data.attributes.description' => 'sometimes|string',
             'data.attributes.status' => 'sometimes|string|in:open,in_progress,closed,resolved',
             'data.attributes.priority' => 'sometimes|string|in:low,medium,high',
-            'data.relationships.author.data.id' => 'sometimes|integer',
+            'data.relationships.author.data.id' => 'prohibited',
         ];
 
-        if($this->user()->tokenCan(Abilities::UpdateOwnTicket))
+        if($this->user()->tokenCan(Abilities::UpdateTicket))
         {
-            $rules['data.relationships.author.data.id'] = 'prohibited';
+            $rules['data.relationships.author.data.id'] = 'sometimes|integer';
         }
         return $rules;
     }
