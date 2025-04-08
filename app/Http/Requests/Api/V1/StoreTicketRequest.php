@@ -31,20 +31,22 @@ class StoreTicketRequest extends BaseTicketRequest
             'data.attributes.description' => 'required|string',
             'data.attributes.status' => 'required|string|in:open,in_progress,closed',
             'data.attributes.priority' => 'required|string|in:low,medium,high',
-            $authorIdAttr => $authorRule . '|size:' . $user->id
         ];
 
         if ($user->tokenCan(Abilities::CreateTicket)) {
             $rules[$authorIdAttr] = $authorRule;
+        } else {
+            $rules[$authorIdAttr] = $authorRule . '|in:' . $user->id;
         }
 
         return $rules;
     }
 
-    protected function prepareForValidation() {
+    protected function prepareForValidation()
+    {
         if ($this->routeIs('authors.tickets.store')) {
             $this->merge([
-                'author' => $this->route('author')
+                'author' => $this->route('author')->id,
             ]);
         }
     }
