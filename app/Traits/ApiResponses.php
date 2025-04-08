@@ -2,12 +2,14 @@
 
 namespace App\Traits;
 
+use Illuminate\Http\JsonResponse;
+
 trait ApiResponses {
-    protected function ok($message, $data = [])
+    public function ok($message, $data = []): JsonResponse
     {
         return $this->successResponse($message, $data, 200);
     }
-    protected function successResponse($message, $data = [], $statusCode = 200)
+    public function successResponse($message, $data = [], $statusCode = 200): JsonResponse
     {
         return response()->json([
             'data' => $data,
@@ -16,11 +18,25 @@ trait ApiResponses {
         ], $statusCode);
     }
 
-    protected function errorResponse($message, $statusCode)
+    public function errorResponse($errors = [], $statusCode = null): JsonResponse
     {
+        if (is_string($errors)) {
+            return response()->json([
+                'message' => $errors,
+                'status' => $statusCode
+            ], $statusCode);
+        }
+
         return response()->json([
+            'errors' => $errors
+        ]);
+    }
+
+    public function unauthorized($message = 'Unauthorized'): JsonResponse
+    {
+        return $this->errorResponse([
+            'status' => 401,
             'message' => $message,
-            'status' => $statusCode,
-        ], $statusCode);
+        ]);
     }
 }
