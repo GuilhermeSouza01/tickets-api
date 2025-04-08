@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponses;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -34,7 +33,7 @@ class ApiController extends Controller
         try {
             $this->authorize($ability, [$targetModel, $this->policyClass]);
             return true;
-        } catch (AuthenticationException $ex) {
+        } catch (AuthorizationException $ex) {
             return false;
         }
 
