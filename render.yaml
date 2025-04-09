@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: tickets-api
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    buildFilter:
+      paths:
+        - Dockerfile
+        - render.yaml
+        - app/**
+        - bootstrap/**
+        - config/**
+        - database/**
+        - public/**
+        - resources/**
+        - routes/**
+        - composer.json
+        - composer.lock
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://tickets-api.onrender.com
+      - key: APP_KEY
+        generateValue: true  # Render gera automaticamente
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: laravel-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: laravel-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: laravel-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: laravel-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: laravel-db
+          property: password
