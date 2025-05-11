@@ -28,7 +28,7 @@ class TicketResource extends JsonResource
                 'status' => $this->status,
                 'priority' => $this->priority,
                 'createdAt' => $this->created_at,
-                'updatedAt'=> $this->updated_at
+                'updatedAt' => $this->updated_at
             ],
             'relationships' => [
                 'author' => [
@@ -36,8 +36,12 @@ class TicketResource extends JsonResource
                         'type' => 'user',
                         'id' => $this->user_id,
                     ],
+                    'attributes' => [
+                        'name' => $this->author?->name,
+                        'email' => $this->author?->email,
+                    ],
                     'links' => [
-                       'self' => route('authors.show', ['author' => $this->user_id])
+                        'self' => route('authors.show', ['author' => $this->user_id])
                     ]
                 ]
             ],
