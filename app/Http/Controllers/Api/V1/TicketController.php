@@ -22,7 +22,7 @@ class TicketController extends ApiController
     public function index(TicketFilter $filters)
     {
 
-        return TicketResource::collection(Ticket::filter($filters)->paginate());
+        return TicketResource::collection(Ticket::filter($filters)->paginate(10));
     }
 
     /**
@@ -42,35 +42,34 @@ class TicketController extends ApiController
      */
     public function show(Ticket $ticket)
     {
-            if($this->include('author')){
-                return new TicketResource($ticket->load('user'));
-            }
-            return new TicketResource($ticket);
+        if ($this->include('author')) {
+            return new TicketResource($ticket->load('author'));
+        }
+        return new TicketResource($ticket);
     }
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateTicketRequest $request, Ticket $ticket)
     {
-            if ($this->isAble('update', $ticket)) {
-                $ticket->update($request->mappedAttributes());
+        if ($this->isAble('update', $ticket)) {
+            $ticket->update($request->mappedAttributes());
 
-                return new TicketResource($ticket);
-            }
-            return $this->unauthorized('You are not authorized to update that resource');
+            return new TicketResource($ticket);
+        }
+        return $this->unauthorized('You are not authorized to update that resource');
     }
 
     public function replace(ReplaceTicketRequest $request, Ticket $ticket)
     {
 
-            // policy
-            if ($this->isAble('replace', $ticket)) {
-                $ticket->update($request->mappedAttributes());
-                return new TicketResource($ticket);
-            }
+        // policy
+        if ($this->isAble('replace', $ticket)) {
+            $ticket->update($request->mappedAttributes());
+            return new TicketResource($ticket);
+        }
 
-            return $this->unauthorized('You are not authorized to update that resource');
-
+        return $this->unauthorized('You are not authorized to update that resource');
     }
 
     /**
@@ -78,13 +77,12 @@ class TicketController extends ApiController
      */
     public function destroy(Ticket $ticket)
     {
-            // policy
-            if ($this->isAble('delete', $ticket)) {
-                $ticket->delete();
+        // policy
+        if ($this->isAble('delete', $ticket)) {
+            $ticket->delete();
 
-                return $this->ok('Ticket successfully deleted');
-            }
-            return $this->unauthorized('You are not authorized to delete that resource');
-
+            return $this->ok('Ticket successfully deleted');
+        }
+        return $this->unauthorized('You are not authorized to delete that resource');
     }
 }
