@@ -17,8 +17,9 @@ abstract class QueryFilter
         $this->request = $request;
     }
 
-    protected function filter($arr) {
-        foreach($arr as $key => $value) {
+    protected function filter($arr)
+    {
+        foreach ($arr as $key => $value) {
             if (method_exists($this, $key)) {
                 $this->$key($value);
             }
@@ -27,10 +28,11 @@ abstract class QueryFilter
         return $this->builder;
     }
 
-    public function apply(Builder $builder) {
+    public function apply(Builder $builder)
+    {
         $this->builder = $builder;
 
-        foreach($this->request->all() as $key => $value) {
+        foreach ($this->request->all() as $key => $value) {
             if (method_exists($this, $key)) {
                 $this->$key($value);
             }
@@ -39,28 +41,40 @@ abstract class QueryFilter
         return $builder;
     }
 
-    protected function sort($value)
+    protected function sortBy($value)
     {
+        logger()->info('SortBy recebeu: ' . $value);
         $sortAttributes = explode(',', $value);
 
-        foreach($sortAttributes as $sortAttribute) {
+        foreach ($sortAttributes as $sortAttribute) {
             $direction = 'asc';
 
-            if(strpos($sortAttribute, '-') === 0) {
-                $direction = 'desc';
-                $sortAttribute = substr($sortAttribute, 1);
+            if (str_contains($sortAttribute, '-')) {
+                [$field, $dir] = explode('-', $sortAttribute);
+                if (in_array($dir, ['asc', 'desc'])) {
+                    $direction = $dir;
+                }
+            } else {
+
+                $field = $sortAttribute;
             }
 
-            if(!in_array($sortAttribute, $this->sortable) && !array_key_exists($sortAttribute, $this->sortable)) {
+            if (!in_array($field, $this->sortable) && !array_key_exists($field, $this->sortable)) {
                 continue;
             }
-            $columnName = $this->sortable[$sortAttribute] ?? null;
+            $columnName = $this->sortable[$field] ?? $field;
 
-            if($columnName == null) {
-                $columnName = $sortAttribute;
+            if ($field === 'priority') {
+                $this->builder->orderByRaw("
+                CASE priority
+                    WHEN 'low' THEN 1
+                    WHEN 'medium' THEN 2
+                    WHEN 'high' THEN 3
+                    ELSE 4
+                END " . strtoupper($direction));
+            } else {
+                $this->builder->orderBy($columnName, $direction);
             }
-
-            $this->builder->orderBy($columnName, $direction);
         }
     }
 }

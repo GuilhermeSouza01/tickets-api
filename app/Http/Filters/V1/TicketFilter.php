@@ -5,13 +5,14 @@ namespace App\Http\Filters\V1;
 class TicketFilter extends QueryFilter
 {
     protected $sortable = [
-        'title',
-        'status',
-        'priority',
+        'title' => 'title',
+        'status' => 'status',
+        'priority' => 'priority',
         'createdAt' => 'created_at',
         'updatedAt' => 'updated_at',
     ];
-    public function createdAt($value) {
+    public function createdAt($value)
+    {
         $dates = explode(',', $value);
 
         if (count($dates) > 1) {
@@ -21,20 +22,29 @@ class TicketFilter extends QueryFilter
         return $this->builder->whereDate('created_at', $value);
     }
 
-    public function include($value) {
+    public function include($value)
+    {
         return $this->builder->with($value);
     }
 
-    public function status($value) {
+    public function status($value)
+    {
         return $this->builder->whereIn('status', explode(',', $value));
     }
 
-    public function title($value) {
+    public function priority($value)
+    {
+        return $this->builder->whereIn('priority', explode(',', $value));
+    }
+
+    public function title($value)
+    {
         $likeStr = str_replace('*', '%', $value);
         return $this->builder->where('title', 'like', $likeStr);
     }
 
-    public function updatedAt($value) {
+    public function updatedAt($value)
+    {
         $dates = explode(',', $value);
 
         if (count($dates) > 1) {
