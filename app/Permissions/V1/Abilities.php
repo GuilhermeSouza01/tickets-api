@@ -6,7 +6,7 @@ use App\Models\User;
 
 final class Abilities
 {
-   //admin
+    //admin
     public const CreateTicket = 'ticket:create';
     public const UpdateTicket = 'ticket:update';
     public const ReplaceTicket = 'ticket:replace';
@@ -16,6 +16,8 @@ final class Abilities
     public const UpdateOwnTicket = 'ticket:own:update';
     public const DeleteOwnTicket = 'ticket:own:delete';
 
+    public const UpdateOwnUser = 'user:own:update';
+
     //manager
     public const CreateUser = 'user:create';
     public const UpdateUser = 'user:update';
@@ -24,7 +26,7 @@ final class Abilities
 
     public static function getAbilities(User $user): array
     {
-        if($user->is_manager) {
+        if ($user->is_manager) {
             return [
                 self::CreateTicket,
                 self::UpdateTicket,
@@ -40,6 +42,7 @@ final class Abilities
                 self::CreateOwnTicket,
                 self::UpdateOwnTicket,
                 self::DeleteOwnTicket,
+                self::UpdateOwnUser,
             ];
         }
     }

@@ -21,10 +21,12 @@ class UpdateUserRequest extends BaseUserRequest
      */
     public function rules(): array
     {
+        $isManager = $this->user()?->is_manager;
+
         return [
             'data.attributes.name' => 'sometimes|string',
             'data.attributes.email' => 'sometimes|email',
-            'data.attributes.isManager' => 'sometimes|boolean',
+            'data.attributes.isManager' => $isManager ? 'sometimes|boolean' : 'prohibited',
             'data.attributes.password' => 'sometimes|string',
         ];
     }

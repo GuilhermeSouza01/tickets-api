@@ -56,25 +56,26 @@ class UserController extends ApiController
     public function update(UpdateUserRequest $request, User $user)
     {
 
-            if ($this->isAble('update', $user)) {
-                $user->update($request->mappedAttributes());
+        if ($this->isAble('update', $user) || ($user->id === auth()->id() && $this->isAble('updateOwn', $user))) {
+            $user->update($request->mappedAttributes());
 
-                return new UserResource($user);
-            }
+            return new UserResource($user);
+        }
 
-            return $this->unauthorized('You are not authorized to update that resource');
+        return $this->unauthorized('You are not authorized to update that resource');
     }
 
-    public function replace(ReplaceUserRequest $request, User $user) {
+    public function replace(ReplaceUserRequest $request, User $user)
+    {
         // PUT
 
-            if ($this->isAble('replace', $user)) {
-                $user->update($request->mappedAttributes());
+        if ($this->isAble('replace', $user)) {
+            $user->update($request->mappedAttributes());
 
-                return new UserResource($user);
-            }
+            return new UserResource($user);
+        }
 
-            return $this->unauthorized('You are not authorized to update that resource');
+        return $this->unauthorized('You are not authorized to update that resource');
     }
 
     /**
@@ -83,12 +84,12 @@ class UserController extends ApiController
     public function destroy(User $user)
     {
 
-            if ($this->isAble('delete', $user)) {
-                $user->delete();
+        if ($this->isAble('delete', $user)) {
+            $user->delete();
 
-                return $this->ok('User successfully deleted');
-            }
+            return $this->ok('User successfully deleted');
+        }
 
-            return $this->unauthorized('You are not authorized to delete that resource');
+        return $this->unauthorized('You are not authorized to delete that resource');
     }
 }
