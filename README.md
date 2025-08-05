@@ -1,13 +1,13 @@
 # 🎫 Fixly – Backend API (Laravel)
 
-API REST desenvolvida com **Laravel** para gerenciamento de tickets. Permite autenticação de usuários, criação e manipulação de tickets e geração de relatórios.
+API REST desenvolvida com **Laravel** para gerenciamento de tickets. Permite autenticação de usuários, criação e manipulação de tickets.
 
 ---
 
 ## 🧰 Tecnologias
 
 - PHP 8.x
-- Laravel 9+ (ou superior)
+- Laravel 12
 - MySQL ou PostgreSQL
 - Laravel Sanctum
 - Eloquent ORM
